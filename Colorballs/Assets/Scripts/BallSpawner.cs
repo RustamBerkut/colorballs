@@ -32,7 +32,7 @@ public class BallSpawner : MonoBehaviour
         SpriteRenderer sr = Instantiate(_spriteRenderers[random],
                         transform.position, transform.rotation);
         sr.transform.parent = transform;
-        _textureWidth = sr.GetComponent<SpriteRenderer>().sprite.texture.width;
+        _textureWidth = sr.GetComponent<Transform>().lossyScale.x;
     }
     private void RespawnBall()
     {

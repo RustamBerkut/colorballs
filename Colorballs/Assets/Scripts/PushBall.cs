@@ -15,5 +15,6 @@ public class PushBall : MonoBehaviour
     {
         transform.parent = null;
         transform.AddComponent<Rigidbody2D>();
+        Destroy(this);
     }
 }

@@ -336,6 +336,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a6406eb412d488418bc4b4f92cbb6f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _ballCount: 3
+  _floorSR: {fileID: 7551835353193348434, guid: b10da1c87710b9f4ab1d1e95dbce4911, type: 3}
 --- !u!1 &592525501
 GameObject:
   m_ObjectHideFlags: 0
