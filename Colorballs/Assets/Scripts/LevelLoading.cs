@@ -12,7 +12,7 @@ public class LevelLoading : MonoBehaviour
     }
     public void MainMenu()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(0);
     }
     public void NextLevel()
     {
