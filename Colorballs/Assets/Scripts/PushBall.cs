@@ -6,7 +6,7 @@ public class PushBall : MonoBehaviour
 {
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !transform.GetComponent<Rigidbody2D>())
         {
             OnPushBall();
         }

@@ -338,6 +338,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _ballCount: 3
   _floorSR: {fileID: 7551835353193348434, guid: b10da1c87710b9f4ab1d1e95dbce4911, type: 3}
+  _balls:
+  - {fileID: 5866661148235464848, guid: f6cae730dceb48f46bd3ebee92617d8b, type: 3}
+  - {fileID: 5866661148235464848, guid: 04c41cdff5570124a90da05d5f64acd6, type: 3}
+  - {fileID: 5866661148235464848, guid: 4f8f3c36c5218dc4b8bca00a7090a7fb, type: 3}
 --- !u!1 &592525501
 GameObject:
   m_ObjectHideFlags: 0
