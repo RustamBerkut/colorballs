@@ -146,6 +146,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afc7e3162a2bad549bc981f26386aa50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _layerMask:
-    serializedVersion: 2
-    m_Bits: 8
+  pieceType: 0
+  particleSystem: {fileID: 3820051506543098103, guid: 7226d6003b4be6d4e96b59abab728c07, type: 3}

@@ -551,7 +551,8 @@ MonoBehaviour:
   - {fileID: 5866661148235464848, guid: 04c41cdff5570124a90da05d5f64acd6, type: 3}
   - {fileID: 5866661148235464848, guid: 4f8f3c36c5218dc4b8bca00a7090a7fb, type: 3}
   _piece: {fileID: 2363516510788464427, guid: 7bded987cb5032f4699204f286863f6c, type: 3}
-  horizontalPieces: []
+  matchPieces: []
+  go: {fileID: 0}
 --- !u!1 &561253626
 GameObject:
   m_ObjectHideFlags: 0

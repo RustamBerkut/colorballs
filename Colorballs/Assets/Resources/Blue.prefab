@@ -147,4 +147,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pieceType: 1
-  colorNumber: 0
+  particleSystem: {fileID: 3820051506543098103, guid: 7226d6003b4be6d4e96b59abab728c07, type: 3}

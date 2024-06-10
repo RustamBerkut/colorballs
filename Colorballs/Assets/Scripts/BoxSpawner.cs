@@ -14,9 +14,12 @@ public class BoxSpawner : MonoBehaviour
     [SerializeField] private List<GameObject> _balls;
     [SerializeField] private GameObject _piece;
 
-    private List<GameObject> horizontalPieces;
-    private float _floorHeight;
-    private GameObject[,] _pieces;
+    public List<GameObject> matchPieces;
+    public GameObject[,] pieces;
+
+    private float m_floorHeight;
+
+    public GameObject go;
 
     private void OnEnable()
     {
@@ -29,17 +32,17 @@ public class BoxSpawner : MonoBehaviour
     private void Start()
     {
         ActionBallCountSetup?.Invoke(_ballCount * _ballCount);
-        _floorHeight = _floorSR.GetComponent<Transform>().lossyScale.y;
-        _pieces = new GameObject[_ballCount, _ballCount];
-        InvokeRepeating(nameof(GetAllMatch), 1f, 1f);
+        m_floorHeight = _floorSR.GetComponent<Transform>().lossyScale.y;
+        pieces = new GameObject[_ballCount, _ballCount];
+        InvokeRepeating(nameof(GetAllMatch), 2f, 2f);
     }
     private void OnBoxSpawner(float value)
     {
         float width = value;
-        width = width * _ballCount + _floorHeight * (_ballCount + 1);
+        width = width * _ballCount + m_floorHeight * (_ballCount + 1);
 
         GameObject floor = Instantiate(_floorSR, transform.position, transform.rotation);
-        floor.GetComponent<Transform>().localScale = new Vector3(width, _floorHeight, 0);
+        floor.GetComponent<Transform>().localScale = new Vector3(width, m_floorHeight, 0);
     
         float count = width / (_ballCount);
         float x = -width / 2;
@@ -49,7 +52,7 @@ public class BoxSpawner : MonoBehaviour
         {
             GameObject wall = Instantiate(_floorSR, transform.position, Quaternion.Euler(0f,0f,90f));
             wall.GetComponent<Transform>().localScale = 
-                new Vector3(value * _ballCount, _floorHeight, 0);
+                new Vector3(value * _ballCount, m_floorHeight, 0);
 
             wall.transform.parent = transform;
             wall.transform.position = transform.position + 
@@ -75,7 +78,7 @@ public class BoxSpawner : MonoBehaviour
                                 transform.rotation);
                 go.GetComponent<Transform>().localScale = new Vector3(size / 3, size / 3, 0);
                 width += diff;
-                _pieces[i, j] = go;
+                pieces[i, j] = go;
             }
             width = distance;
             height += size;
@@ -103,6 +106,7 @@ public class BoxSpawner : MonoBehaviour
             height += diff;
         }
     }
+
     private void GetAllMatch()
     {
         GetHorizontalMatchBall();
@@ -113,27 +117,32 @@ public class BoxSpawner : MonoBehaviour
     {
         for (int j = 0; j < _ballCount; j++)
         {
-            PieceType pieceType = _pieces[j, 0].GetComponent<PieceMatch>().pieceType;
-            if (pieceType == PieceType.NoColor) return;
-            GameObject go = _pieces[j, 0].GetComponentInChildren<BallSameFinder>().gameObject;
-            horizontalPieces.Clear();
-            horizontalPieces.Add(go);
-            for (int i = 1; i < _ballCount; i++)
+            matchPieces.Clear();
+            PieceType mainPieceType = pieces[j, 0]
+                .GetComponent<PieceMatch>().pieceType;
+            if (mainPieceType != PieceType.NoColor)
             {
-                PieceType _pieceType = _pieces[j, i].GetComponent<PieceMatch>().pieceType;
-                if (_pieceType == pieceType && _pieceType != PieceType.NoColor)
+                 go = pieces[j, 0]
+                .GetComponentInChildren<BallSameFinder>().gameObject;
+                matchPieces.Add(go);
+                for (int i = 1; i < _ballCount; i++)
                 {
-                    go = _pieces[j, i].GetComponentInChildren<BallSameFinder>().gameObject;
-                    horizontalPieces.Add(go);
-                    if (horizontalPieces.Count >= 3)
+                    PieceType _pieceType = pieces[j, i]
+                        .GetComponent<PieceMatch>().pieceType;
+                    if (_pieceType == mainPieceType)
                     {
-                        for (int k = 0; k < horizontalPieces.Count; k++)
-                        {
-                            Destroy(horizontalPieces[k]);
-                        }
-                        horizontalPieces.Clear();
-                        InMatchAction();
+                        go = pieces[j, i].GetComponentInChildren<BallSameFinder>()
+                            .gameObject;
+                        matchPieces.Add(go);
                     }
+                }
+                if (matchPieces.Count >= 3)
+                {
+                    for (int k = 0; k < matchPieces.Count; k++)
+                    {
+                        Destroy(matchPieces[k]);
+                    }
+                    InMatchAction();
                 }
             }
         }
@@ -142,25 +151,24 @@ public class BoxSpawner : MonoBehaviour
     {
         for (int j = 0; j < _ballCount; j++)
         {
-            PieceType pieceType = _pieces[0, j].GetComponent<PieceMatch>().pieceType;
+            matchPieces.Clear();
+            PieceType pieceType = pieces[0, j].GetComponent<PieceMatch>().pieceType;
             if (pieceType == PieceType.NoColor) return;
-            GameObject go = _pieces[0, j].GetComponentInChildren<BallSameFinder>().gameObject;
-            horizontalPieces.Clear();
-            horizontalPieces.Add(go);
+            go = pieces[0, j].GetComponentInChildren<BallSameFinder>().gameObject;
+            matchPieces.Add(go);
             for (int i = 1; i < _ballCount; i++)
             {
-                PieceType _pieceType = _pieces[i, j].GetComponent<PieceMatch>().pieceType;
-                if (_pieceType == pieceType && _pieceType != PieceType.NoColor)
+                PieceType _pieceType = pieces[i, j].GetComponent<PieceMatch>().pieceType;
+                if (_pieceType == pieceType)
                 {
-                    go = _pieces[i, j].GetComponentInChildren<BallSameFinder>().gameObject;
-                    horizontalPieces.Add(go);
-                    if (horizontalPieces.Count >= 3)
+                    go = pieces[i, j].GetComponentInChildren<BallSameFinder>().gameObject;
+                    matchPieces.Add(go);
+                    if (matchPieces.Count >= 3)
                     {
-                        for (int k = 0; k < horizontalPieces.Count; k++)
+                        for (int k = 0; k < matchPieces.Count; k++)
                         {
-                            Destroy(horizontalPieces[k]);
+                            Destroy(matchPieces[k]);
                         }
-                        horizontalPieces.Clear();
                         InMatchAction();
                     }
                 }
@@ -169,50 +177,48 @@ public class BoxSpawner : MonoBehaviour
     }
     private void GetCrossMatchBall()
     {
-        PieceType pieceType = _pieces[0, 0].GetComponent<PieceMatch>().pieceType;
+        PieceType pieceType = pieces[0, 0].GetComponent<PieceMatch>().pieceType;
         if (pieceType == PieceType.NoColor) return;
-        GameObject go = _pieces[0, 0].GetComponentInChildren<BallSameFinder>().gameObject;
-        horizontalPieces.Clear();
-        horizontalPieces.Add(go);
+        go = pieces[0, 0].GetComponentInChildren<BallSameFinder>().gameObject;
+        matchPieces.Clear();
+        matchPieces.Add(go);
 
         for (int j = 1; j < _ballCount; j++)
         {
-            PieceType _pieceType = _pieces[j, j].GetComponent<PieceMatch>().pieceType;
-            if (_pieceType == pieceType && _pieceType != PieceType.NoColor)
+            PieceType _pieceType = pieces[j, j].GetComponent<PieceMatch>().pieceType;
+            if (_pieceType == pieceType)
             {
-                go = _pieces[j, j].GetComponentInChildren<BallSameFinder>().gameObject;
-                horizontalPieces.Add(go);
-                if (horizontalPieces.Count >= 3)
+                go = pieces[j, j].GetComponentInChildren<BallSameFinder>().gameObject;
+                matchPieces.Add(go);
+                if (matchPieces.Count >= 3)
                 {
-                    for (int k = 0; k < horizontalPieces.Count; k++)
+                    for (int k = 0; k < matchPieces.Count; k++)
                     {
-                        Destroy(horizontalPieces[k]);
+                        Destroy(matchPieces[k]);
                     }
-                    horizontalPieces.Clear();
                     InMatchAction();
                 }
             }
         }
-        pieceType = _pieces[_ballCount -1, 0].GetComponent<PieceMatch>().pieceType;
+        pieceType = pieces[_ballCount -1, 0].GetComponent<PieceMatch>().pieceType;
         if (pieceType == PieceType.NoColor) return;
-        go = _pieces[_ballCount - 1, 0].GetComponentInChildren<BallSameFinder>().gameObject;
-        horizontalPieces.Clear();
-        horizontalPieces.Add(go);
+        go = pieces[_ballCount - 1, 0].GetComponentInChildren<BallSameFinder>().gameObject;
+        matchPieces.Clear();
+        matchPieces.Add(go);
         int i = 1;
         for (int j = _ballCount - 2; j >= 0; j--)
         {
-            PieceType _pieceType = _pieces[j, i].GetComponent<PieceMatch>().pieceType;
-            if (_pieceType == pieceType && _pieceType != PieceType.NoColor)
+            PieceType _pieceType = pieces[j, i].GetComponent<PieceMatch>().pieceType;
+            if (_pieceType == pieceType)
             {
-                go = _pieces[j, j].GetComponentInChildren<BallSameFinder>().gameObject;
-                horizontalPieces.Add(go);
-                if (horizontalPieces.Count >= 3)
+                go = pieces[j, i].GetComponentInChildren<BallSameFinder>().gameObject;
+                matchPieces.Add(go);
+                if (matchPieces.Count >= 3)
                 {
-                    for (int k = 0; k < horizontalPieces.Count; k++)
+                    for (int k = 0; k < matchPieces.Count; k++)
                     {
-                        Destroy(horizontalPieces[k]);
+                        Destroy(matchPieces[k]);
                     }
-                    horizontalPieces.Clear();
                     InMatchAction();
                 }
             }
