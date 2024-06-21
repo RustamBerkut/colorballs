@@ -11,13 +11,17 @@ public enum PieceType
 public class BallSameFinder : MonoBehaviour
 {
     public PieceType pieceType;
-    [SerializeField] private ParticleSystem particleSystem;
+    [SerializeField] private ParticleSystem _particleSystem;
 
+    private void OnDisable()
+    {
+        if (_particleSystem != null)
+        {
+            Instantiate(_particleSystem, transform.position, transform.rotation);
+        }
+    }
     private void OnDestroy()
     {
-        if (particleSystem != null) 
-        {
-            Instantiate(particleSystem, transform.position, transform.rotation);
-        }
+        
     }
 }

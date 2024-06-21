@@ -16,10 +16,11 @@ public class BoxSpawner : MonoBehaviour
 
     public List<GameObject> matchPieces;
     public GameObject[,] pieces;
+    public GameObject go;
 
     private float m_floorHeight;
 
-    public GameObject go;
+    
 
     private void OnEnable()
     {
